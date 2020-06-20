@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
+  before_action :set_user, only: %i(show edit update destroy)
   
   def show
-    @user = User.find(params[:id])
   end
 
   def new
@@ -19,9 +19,28 @@ class UsersController < ApplicationController
     end
   end
   
+  def edit
+  end
+  
+  def update
+    if @user.update_attributes(user_params)
+      flash[:success] = "ユーザー情報を更新しました。"
+      redirect_to @user
+    else
+      render :edit
+    end
+  end
+  
+  def destroy
+  end
+  
   private
   
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+    
+    def set_user
+      @user = User.find(params[:id])
     end
 end
