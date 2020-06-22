@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   before_action :set_user, only: %i(show edit update destroy)
   before_action :logged_in_user, only: %i(index show edit update destroy)
   before_action :correct_user, only: %i(edit, update)
-  before_action :admin_user, only: :destroy
+  before_action :admin_user, only: %i(index, destroy)
+  before_action :admin_or_correct_user, only: %i(show)
   
   def index
     @users = User.paginate(page: params[:page])
@@ -67,5 +68,13 @@ class UsersController < ApplicationController
     
     def admin_user
       redirect_to root_url unless current_user.admin?
+    end
+    
+    def admin_or_correct_user
+      @user = User.find(params[:user_id]) if @user.blank?
+      unless current_user?(@user) || current_user.admin?
+        flash[:danger] = "編集権限がありません。"
+        redirect_to(root_url)
+      end
     end
 end

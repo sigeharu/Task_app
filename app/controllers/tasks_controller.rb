@@ -1,6 +1,8 @@
 class TasksController < ApplicationController
   before_action :set_user
   before_action :set_task, only: %i(show edit update destroy)
+  before_action :logged_in_user
+  before_action :correct_user
   
   def index
     @tasks = @user.tasks
@@ -57,4 +59,15 @@ class TasksController < ApplicationController
         redirect_to user_tasks_url @user
       end
     end
+    
+    def logged_in_user
+      unless logged_in?
+        flash[:danger] = "ログインして下さい。"
+        redirect_to login_url
+      end
+    end
+    
+    def correct_user
+      redirect_to(root_url) unless current_user?(@user)
+    end    
 end
