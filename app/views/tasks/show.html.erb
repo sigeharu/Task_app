@@ -16,7 +16,8 @@
         </tr>
         <tr>
           <th class="active">詳細</th>
-          <td><%= raw Rinku.auto_link(@task.description, :all, 'target="_blank"') %></td>
+          <td><%= raw Rinku.auto_link(safe_join(@task.description.split("\n"), tag(:br)),
+          :all, 'target="_blank"') %></td>
         </tr>
         <tr>
           <th class="active">作成日</th>
@@ -32,7 +33,7 @@
     <div>
       <%= link_to "編集", edit_user_task_path(@user, @task), class: "btn btn-lg btn-success" %>
       <%= link_to "削除", user_task_path(@user, @task), method: :delete,
-      date: { confirm: "「#{@task.name}」を削除します。よろしいですか？"}, class: "btn btn-lg btn-danger" %>
+      data: { confirm: "「#{@task.name}」を削除します。よろしいですか？"}, class: "btn btn-lg btn-danger" %>
     </div>
   </div>
 </div>
